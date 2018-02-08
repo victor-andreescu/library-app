@@ -10,4 +10,9 @@ class Tag extends Model
         'name', 
         'description'
     ];
+
+    public function books()
+    {
+        return $this->belongsToMany('\App\Book');
+    }
 }

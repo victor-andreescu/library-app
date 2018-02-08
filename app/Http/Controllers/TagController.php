@@ -100,7 +100,7 @@ class TagController extends Controller
      */
     public function destroy(\App\Tag $tag)
     {
-        $author->delete();
+        $tag->delete();
 
         return back();
     }

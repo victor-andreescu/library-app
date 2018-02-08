@@ -1,9 +1,11 @@
 
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css");
 
 // Variables
 @import "variables";
 
+@import "select2-bootstrap.min.css";
 // Bootstrap
 @import "~bootstrap-sass/assets/stylesheets/bootstrap";

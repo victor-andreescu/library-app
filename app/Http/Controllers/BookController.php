@@ -13,7 +13,11 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
+        $books = \App\Book::all();
+
+        return view('book.index')->with([
+            'books' => $books
+        ]);
     }
 
     /**
@@ -23,7 +27,11 @@ class BookController extends Controller
      */
     public function create()
     {
-        //
+        return view('book.form')->with([
+            'authors' => \App\Author::all(),
+            'tags' => \App\Tag::all()
+        ]);
+
     }
 
     /**
@@ -34,7 +42,28 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|string',
+            'author_id' => 'required|numeric',
+            // 'tags' => 'required|array',
+            // 'tags.*' => 'numeric',
+            'cover_image' => 'required|image|max:2000',
+            'description' => 'required|string'
+        ]);
+
+        // file upload
+        $path = $request->file('cover_image')->store('book-covers', 'public');
+        $book = $request->all();
+        $book['cover_image'] = $path;
+        $book = \App\Book::create($book);
+        
+        $book->tags()->attach($request['tags']);
+        
+        // create with relationship
+        // save tags
+
+
+        return redirect()->route('book.index');
     }
 
     /**
@@ -54,10 +83,15 @@ class BookController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(\App\Book $book)
     {
-        //
+        return view('book.form')->with([
+            'book' => $book,
+            'authors' => \App\Author::all(),
+            'tags' => \App\Tag::all()
+        ]);
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -66,9 +100,33 @@ class BookController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, \App\Book $book)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|string',
+            'author_id' => 'required|numeric',
+            // 'tags' => 'required|array',
+            // 'tags.*' => 'numeric',
+            'cover_image' => 'image|max:2000',
+            'description' => 'required|string'
+        ]);
+
+        $tmp = $request->all();
+        unset($tmp['tags']);
+
+        if ( $request->hasFile('cover_image') ) {
+            \File::delete(public_path($book->cover_image));
+            $path = $request->file('cover_image')->store('book-covers', 'public');
+            $tmp['cover_image'] = $path;
+        } else {
+            $tmp['cover_image'] = $book->cover_image;
+        }
+
+        $book->update($tmp);
+        $book->tags()->sync($request['tags']);
+        
+
+        return redirect()->route('book.index');
     }
 
     /**
@@ -77,8 +135,11 @@ class BookController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(\App\Book $book)
     {
-        //
+        \File::delete(public_path($book->cover_image));
+        $book->delete();
+
+        return back();
     }
 }
