@@ -52,7 +52,7 @@
                                     <img src="{{$book->cover_image}}" alt="" width="80">
                                 </td>
                                 <td>{{$book->name}}</td>
-                                <td>author</td>
+                                <td>{{$book->author->name}}</td>
                                 <td>
                                     @foreach($book->tags as $tag)
                                         {{$book->tags->last() == $tag ? $tag->name : $tag->name.","}} 
