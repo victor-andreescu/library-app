@@ -7,6 +7,7 @@
 
 require('./bootstrap');
 
+
 $(".jsSelect").select2();
 
 // window.Vue = require('vue');

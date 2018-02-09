@@ -14,9 +14,10 @@ class BookController extends Controller
     public function index()
     {
         $books = \App\Book::all();
-
+        // dd(\Auth::user()->books);
         return view('book.index')->with([
-            'books' => $books
+            'books' => $books,
+            'myRents' => \Auth::user()->books
         ]);
     }
 
@@ -45,8 +46,8 @@ class BookController extends Controller
         $this->validate($request, [
             'name' => 'required|string',
             'author_id' => 'required|numeric',
-            // 'tags' => 'required|array',
-            // 'tags.*' => 'numeric',
+            'tags' => 'required|array',
+            'tags.*' => 'numeric',
             'cover_image' => 'required|image|max:2000',
             'description' => 'required|string'
         ]);
@@ -105,8 +106,8 @@ class BookController extends Controller
         $this->validate($request, [
             'name' => 'required|string',
             'author_id' => 'required|numeric',
-            // 'tags' => 'required|array',
-            // 'tags.*' => 'numeric',
+            'tags' => 'required|array',
+            'tags.*' => 'numeric',
             'cover_image' => 'image|max:2000',
             'description' => 'required|string'
         ]);

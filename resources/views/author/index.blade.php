@@ -6,11 +6,13 @@
             <h1>Authors</h1>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12">
-            <a class="btn btn-primary" href="{{route('author.create')}}" role="button">Add book</a>
+    @can('edit', \App\Author::class)
+        <div class="row">
+            <div class="col-12">
+                <a class="btn btn-primary" href="{{route('author.create')}}" role="button">Add book</a>
+            </div>
         </div>
-    </div>
+    @endcan
     <div class="row" style="margin-top: 40px;">
         <div class="col-12">
             <div class="table-responsive">
@@ -33,16 +35,18 @@
                                 <td>{{$author->name}}</td>
                                 <td>{{$author->description}}</td>
                                 <td>
-                                    <a href="{{route('author.edit', ['author' => $author->id])}}" class="btn btn-default">
-                                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                                    </a>
-                                    <form action="{{route('author.delete', ['author' => $author->id])}}" method="post"  style="display: inline-block">
-                                        {{csrf_field()}}
-                                        {{method_field('DELETE')}}
-                                        <button class="btn btn-default">
-                                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                        </button>
-                                    </form>
+                                    @can('edit', \App\Author::class)
+                                        <a href="{{route('author.edit', ['author' => $author->id])}}" class="btn btn-default">
+                                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                        </a>
+                                        <form action="{{route('author.delete', ['author' => $author->id])}}" method="post"  style="display: inline-block">
+                                            {{csrf_field()}}
+                                            {{method_field('DELETE')}}
+                                            <button class="btn btn-default">
+                                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                            </button>
+                                        </form>
+                                    @endcan
                                 </td>
                             </tr>
                             @endforeach
